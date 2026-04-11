@@ -43,7 +43,7 @@ const uint8_t _clear[] = {
 
 class YDisplay {
    public:
-    YDisplay(byte clkPin, byte dioPin) : _display(clkPin, dioPin) { _display.setBrightness(3); }
+    YDisplay(byte clkPin, byte dioPin) : _display(clkPin, dioPin) { _display.setBrightness(DISP_BRIGHTNESS); }
 
     void clear() { _display.clear(); }
 

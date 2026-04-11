@@ -5,6 +5,7 @@
 // Display
 #define DISP_CLK_PIN 10
 #define DISP_DIO_PIN 11
+#define DISP_BRIGHTNESS 7  // 0 - 7
 
 // Left button
 #define LEFT_BTN_PIN 2
@@ -27,3 +28,5 @@
 // DY-SV5W (MP3 Player)
 #define MP3_RX_PIN 12
 #define MP3_TX_PIN 13
+#define MP3_INITIAL_VOLUME 20         // 0 - 30
+#define MP3_EQ_MODE DY::eq_t::Normal  // Normal, Pop, Rock, Jazz, Classic

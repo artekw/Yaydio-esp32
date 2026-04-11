@@ -8,8 +8,9 @@ class YMP3Player {
 
     bool begin() {
         _player.begin();
-        _player.setVolume(15);
+        _player.setVolume(MP3_INITIAL_VOLUME);
         _player.setCycleMode(DY::play_mode_t::RepeatDir);
+        _player.setEq(MP3_EQ_MODE);
         _player.stop();
 
         return !(_player.checkPlayState() == DY::play_state_t::Fail);
@@ -59,7 +60,7 @@ class YMP3Player {
 
     uint16_t currentTrack() { return _player.getPlayingSound() - _firstTrackInAlbum + 1; }
 
-      private:
+   private:
     SoftwareSerial _serial;
     DY::Player _player;
     uint16_t _firstTrackInAlbum;
