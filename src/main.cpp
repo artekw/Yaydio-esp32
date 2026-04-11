@@ -8,7 +8,7 @@
 #include "nfc.h"
 #include "rotary_encoder.h"
 
-YButton cardBtn(CARD_BTN_PIN);
+YButton cardBtn(CARD_BTN_PIN, LOW);
 
 YButton leftBtn(LEFT_BTN_PIN);
 YButton rightBtn(RIGHT_BTN_PIN);
@@ -94,7 +94,7 @@ void loop() {
 
         case READ_CARD_MODE:
             if (hasModeChanged) {
-                display.showLoading();
+                display.showHi();
                 mp3Player.stop();
             }
             switch (nfc.read()) {
