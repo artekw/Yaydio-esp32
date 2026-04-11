@@ -26,7 +26,6 @@ class YNFC {
         success = _nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
         if (!success) return NO_CARD;
-        if (uidLength != 4) return FAIL;
 
         _nfc.PrintHex(uid, uidLength);
 
