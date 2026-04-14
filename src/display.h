@@ -1,5 +1,13 @@
 #include <TM1637Display.h>
 
+// Segment naming convention for the display:
+//
+//  A    -
+// F B  | |
+//  G    -
+// E C  | |
+//  D    -
+
 const uint8_t _fail[] = {
     SEG_A | SEG_E | SEG_F | SEG_G,                  // F
     SEG_A | SEG_B | SEG_C | SEG_E | SEG_F | SEG_G,  // A
@@ -41,6 +49,20 @@ const uint8_t _clear[] = {
     SEG_A | SEG_D | SEG_E | SEG_F | SEG_G,          // E
 };
 
+const uint8_t _random[] = {
+    SEG_E | SEG_G,                                  // r
+    SEG_A | SEG_B | SEG_C | SEG_E | SEG_F | SEG_G,  // A
+    SEG_C | SEG_E | SEG_G,                          // n
+    SEG_B | SEG_C | SEG_D | SEG_E | SEG_G,          // d
+};
+
+const uint8_t _randomOff[] = {
+    SEG_E | SEG_G,                                  // r
+    SEG_A | SEG_B | SEG_C | SEG_D | SEG_E | SEG_F,  // O
+    SEG_A | SEG_E | SEG_F | SEG_G,                  // F
+    SEG_A | SEG_E | SEG_F | SEG_G,                  // F
+};
+
 class YDisplay {
    public:
     YDisplay(byte clkPin, byte dioPin) : _display(clkPin, dioPin) { _display.setBrightness(DISP_BRIGHTNESS); }
@@ -70,6 +92,8 @@ class YDisplay {
         _display.clear();
         _display.setSegments(_hi, 2, 1);
     }
+
+    void showRandom(bool isRandomOn) { _display.setSegments(isRandomOn ? _random : _randomOff); }
 
    private:
     TM1637Display _display;

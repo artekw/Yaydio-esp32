@@ -58,6 +58,12 @@ class YMP3Player {
 
     bool isPlaying() { return _isPlaying; }
 
+    bool toggleRandom() {
+        _isRandomOn = !_isRandomOn;
+        _player.setCycleMode(_isRandomOn ? DY::play_mode_t::RandomDir : DY::play_mode_t::RepeatDir);
+        return _isRandomOn;
+    }
+
     uint16_t currentTrack() { return _player.getPlayingSound() - _firstTrackInAlbum + 1; }
 
    private:
@@ -65,4 +71,5 @@ class YMP3Player {
     DY::Player _player;
     uint16_t _firstTrackInAlbum;
     bool _isPlaying = false;
+    bool _isRandomOn = false;
 };

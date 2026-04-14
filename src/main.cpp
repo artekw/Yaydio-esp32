@@ -87,7 +87,7 @@ void loop() {
         case NO_CARD_MODE:
             if (hasModeChanged) {
                 mp3Player.stop();
-                display.showHi();
+                display.clear();
             }
             if (cardBtn.isPressed()) changeMode(READ_CARD_MODE);
             break;
@@ -141,9 +141,14 @@ void loop() {
                 break;
             }
 
-            if (leftBtn.justReleased() || rightBtn.justReleased()) {
+            if (leftBtn.justReleased()) {
                 mp3Player.togglePlayback();
                 updateTrackScreen();
+            }
+
+            if (rightBtn.justReleased()) {
+                display.showRandom(mp3Player.toggleRandom());
+                lastUpdate = currentMillis;
             }
 
             if (leftBtn.isPressed() && rightBtn.isPressed()) {
