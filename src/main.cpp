@@ -58,7 +58,6 @@ bool tryInitializePeripherals(int attempts = 5) {
         if (nfc.begin() && mp3Player.begin()) {
             return true;
         }
-        Serial.println("delay 500ms");
         delay(500);
     }
     return false;
