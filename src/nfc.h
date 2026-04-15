@@ -11,11 +11,40 @@ enum YNFCResult {
 
 class YNFC {
    public:
-    YNFC(byte irqPin, byte resetPin) : _nfc(irqPin, resetPin) {};
+    YNFC(byte irqPin, byte resetPin) : _nfc(irqPin, resetPin) { _resetPin = resetPin; };
 
     bool begin() { return _nfc.begin(); }
 
     YNFCResult read() {
+        YNFCResult result = _read();
+        _powerOff();
+        return result;
+    }
+
+    YNFCResult setAlbum(uint16_t album) {
+        if (!_powerOn()) return FAIL;
+        YNFCResult result = _setAlbum(album);
+        _powerOff();
+        return result;
+    }
+
+    uint16_t album() { return _album; }
+
+   private:
+    void _powerOff() {
+        uint8_t sleepCommand[] = {PN532_COMMAND_POWERDOWN, 0x00};
+        _nfc.sendCommandCheckAck(sleepCommand, sizeof(sleepCommand));
+        delay(50);
+        digitalWrite(_resetPin, LOW);
+    }
+
+    bool _powerOn() {
+        digitalWrite(_resetPin, HIGH);
+        delay(50);
+        return _nfc.begin();
+    }
+
+    YNFCResult _read() {
         uint8_t success;
         uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0};  // Buffer to store the returned UID
         uint8_t uidLength;                      // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
@@ -26,7 +55,6 @@ class YNFC {
         success = _nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
         if (!success) return NO_CARD;
-        if (uidLength != 4) return FAIL;
 
         _nfc.PrintHex(uid, uidLength);
 
@@ -53,9 +81,9 @@ class YNFC {
         return SUCCESS;
     }
 
-    YNFCResult setAlbum(uint16_t album) {
-        YNFCResult readResult = read();
-        if (read() != SUCCESS) return readResult;
+    YNFCResult _setAlbum(uint16_t album) {
+        YNFCResult readResult = _read();
+        if (readResult != SUCCESS) return readResult;
 
         uint8_t data[16] = {0};
 
@@ -70,9 +98,7 @@ class YNFC {
         return FAIL;
     }
 
-    uint16_t album() { return _album; }
-
-   private:
+    byte _resetPin;
     uint16_t _album = 0;
     Adafruit_PN532 _nfc;
 };

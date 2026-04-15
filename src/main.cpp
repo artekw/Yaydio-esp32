@@ -8,7 +8,7 @@
 #include "nfc.h"
 #include "rotary_encoder.h"
 
-YButton cardBtn(CARD_BTN_PIN);
+YButton cardBtn(CARD_BTN_PIN, LOW);
 
 YButton leftBtn(LEFT_BTN_PIN);
 YButton rightBtn(RIGHT_BTN_PIN);
@@ -58,7 +58,6 @@ bool tryInitializePeripherals(int attempts = 5) {
         if (nfc.begin() && mp3Player.begin()) {
             return true;
         }
-        Serial.println("delay 500ms");
         delay(500);
     }
     return false;
@@ -87,14 +86,14 @@ void loop() {
         case NO_CARD_MODE:
             if (hasModeChanged) {
                 mp3Player.stop();
-                display.showHi();
+                display.clear();
             }
             if (cardBtn.isPressed()) changeMode(READ_CARD_MODE);
             break;
 
         case READ_CARD_MODE:
             if (hasModeChanged) {
-                display.showLoading();
+                display.showHi();
                 mp3Player.stop();
             }
             switch (nfc.read()) {
@@ -141,9 +140,14 @@ void loop() {
                 break;
             }
 
-            if (leftBtn.justReleased() || rightBtn.justReleased()) {
+            if (leftBtn.justReleased()) {
                 mp3Player.togglePlayback();
                 updateTrackScreen();
+            }
+
+            if (rightBtn.justReleased()) {
+                display.showRandom(mp3Player.toggleRandom());
+                lastUpdate = currentMillis;
             }
 
             if (leftBtn.isPressed() && rightBtn.isPressed()) {

@@ -4,16 +4,23 @@ enum YButtonState { JUST_PRESSED, STILL_PRESSED, JUST_RELEASED, STILL_RELEASED }
 
 class YButton {
    public:
-    YButton(byte pin) : _btn(pin) { _btn.setDebounceTime(20); }
+    YButton(byte pin) : _btn(pin) {
+        _btn.setDebounceTime(20);
+        _normalState = HIGH;
+    }
+    YButton(byte pin, bool normalState) : _btn(pin) {
+        _btn.setDebounceTime(20);
+        _normalState = normalState;
+    }
 
     void loop() {
         _btn.loop();
         _currentState = _btn.getState();
 
         if (_currentState != _previousState) {
-            _state = _currentState == LOW ? JUST_PRESSED : JUST_RELEASED;
+            _state = _currentState == _normalState ? JUST_RELEASED : JUST_PRESSED;
         } else {
-            _state = _currentState == LOW ? STILL_PRESSED : STILL_RELEASED;
+            _state = _currentState == _normalState ? STILL_RELEASED : STILL_PRESSED;
         }
 
         _previousState = _currentState;
@@ -29,6 +36,7 @@ class YButton {
    private:
     ezButton _btn;
     YButtonState _state;
-    bool _currentState = HIGH;
-    bool _previousState = HIGH;
+    bool _normalState;
+    bool _currentState = _normalState;
+    bool _previousState = _normalState;
 };
