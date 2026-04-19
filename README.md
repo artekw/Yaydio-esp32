@@ -14,7 +14,7 @@ CDs in favor of easy-to-use keycards.
 - **Keycard playback:** Insert a keycard to instantly play an album.
 - **Simple controls:** Play/pause, next/previous track, volume up/down.
 - **Audio options:** Built-in speaker or connect headphones via the 3.5mm jack.
-- **Long battery life:** Over 9 hours of play time.
+- **Long battery life:** Over 12 hours of play time.
 - **High capacity:**
   - Up to 999 songs per album
   - Up to 9999 albums
