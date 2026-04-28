@@ -52,7 +52,17 @@ CDs in favor of easy-to-use keycards.
 3. Turn the right knob to select the album number.
 4. Press the right knob to write the album number to the keycard.
 
-## 💿 Adding albums
+## 💿 Adding albums (NEW WAY)
+
+1. Download [Yaydio SD Flash](https://github.com/JakesMD/Yaydio-SD-Flash) for
+   your platform.
+2. Format the SD card to FAT16 or FAT32.
+3. In the **Yaydio SD Flash** app:
+   1. Create your albums.
+   2. Create a new deck and select the albums to be on it.
+   3. Write the deck to the SD card.
+
+## 💿 Adding albums (OLD WAY)
 
 #### Prepare the SD card
 
