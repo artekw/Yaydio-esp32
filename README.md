@@ -191,7 +191,8 @@ probably find the parts much cheaper in other stores.
 
 ### 🏗️ Assembly
 
-[yaydio.step](yaydio.step) contains the models of the 3D-printed parts.
+[yaydio.step](yaydio.step) contains the models of the 3D-printed parts. I have
+also uploaded the [Bambu Studio project file](yaydio.3mf).
 
 **Printer:** Bambu Lab A1 with AMS
 
