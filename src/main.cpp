@@ -97,14 +97,14 @@ void loop() {
                 mp3Player.stop();
             }
             switch (nfc.read()) {
-                case NO_CARD:
+                case YNFC_NO_CARD:
                     changeMode(NO_CARD_MODE);
                     break;
-                case SUCCESS:
+                case YNFC_SUCCESS:
                     selectedAlbum = nfc.album();
                     changeMode(selectedAlbum == 0 ? NO_ALBUM_MODE : PLAYER_MODE);
                     break;
-                case FAIL:
+                case YNFC_FAIL:
                     changeMode(FAIL_MODE);
                     break;
             }
@@ -113,17 +113,17 @@ void loop() {
         case WRITE_CARD_MODE:
             if (hasModeChanged) display.showLoading();
             switch (nfc.setAlbum(selectedAlbum)) {
-                case NO_CARD:
+                case YNFC_NO_CARD:
                     changeMode(NO_CARD_MODE);
                     break;
-                case SUCCESS:
+                case YNFC_SUCCESS:
                     if (selectedAlbum == 0) {
                         changeMode(NO_ALBUM_MODE);
                     } else {
                         changeMode(PLAYER_MODE);
                     }
                     break;
-                case FAIL:
+                case YNFC_FAIL:
                     changeMode(FAIL_MODE);
                     break;
             }

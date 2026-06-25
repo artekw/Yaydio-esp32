@@ -4,9 +4,9 @@
 #include <Wire.h>
 
 enum YNFCResult {
-    NO_CARD,
-    SUCCESS,
-    FAIL,
+    YNFC_NO_CARD,
+    YNFC_SUCCESS,
+    YNFC_FAIL,
 };
 
 class YNFC {
@@ -22,7 +22,7 @@ class YNFC {
     }
 
     YNFCResult setAlbum(uint16_t album) {
-        if (!_powerOn()) return FAIL;
+        if (!_powerOn()) return YNFC_FAIL;
         YNFCResult result = _setAlbum(album);
         _powerOff();
         return result;
@@ -54,7 +54,7 @@ class YNFC {
         // if the uid is 4 bytes (Mifare Classic) or 7 bytes (Mifare Ultralight)
         success = _nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength);
 
-        if (!success) return NO_CARD;
+        if (!success) return YNFC_NO_CARD;
 
         _nfc.PrintHex(uid, uidLength);
 
@@ -65,25 +65,25 @@ class YNFC {
         // to leave it alone unless you know what you're doing
         success = _nfc.mifareclassic_AuthenticateBlock(uid, uidLength, 4, 0, keya);
 
-        if (!success) return FAIL;
+        if (!success) return YNFC_FAIL;
 
         uint8_t data[16];
 
         success = _nfc.mifareclassic_ReadDataBlock(4, data);
 
-        if (!success) return FAIL;
+        if (!success) return YNFC_FAIL;
 
         _nfc.PrintHexChar(data, 16);
 
         // Reconstruct album number from the first two bytes (little-endian)
         _album = data[0] | (data[1] << 8);
 
-        return SUCCESS;
+        return YNFC_SUCCESS;
     }
 
     YNFCResult _setAlbum(uint16_t album) {
         YNFCResult readResult = _read();
-        if (readResult != SUCCESS) return readResult;
+        if (readResult != YNFC_SUCCESS) return readResult;
 
         uint8_t data[16] = {0};
 
@@ -93,9 +93,9 @@ class YNFC {
 
         if (_nfc.mifareclassic_WriteDataBlock(4, data)) {
             _album = album;
-            return SUCCESS;
+            return YNFC_SUCCESS;
         }
-        return FAIL;
+        return YNFC_FAIL;
     }
 
     byte _resetPin;

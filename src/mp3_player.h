@@ -1,10 +1,12 @@
 #include <Arduino.h>
 #include <DYPlayerArduino.h>
-#include <SoftwareSerial.h>
+#include <HardwareSerial.h>
+
+extern HardwareSerial Serial1;
 
 class YMP3Player {
    public:
-    YMP3Player(byte rxPin, byte txPin) : _serial(rxPin, txPin), _player(&_serial) {}
+    YMP3Player(byte rxPin, byte txPin) : _rxPin(rxPin), _txPin(txPin), _player(&Serial1) {}
 
     bool begin() {
         _player.begin();
@@ -67,7 +69,9 @@ class YMP3Player {
     uint16_t currentTrack() { return _player.getPlayingSound() - _firstTrackInAlbum + 1; }
 
    private:
-    SoftwareSerial _serial;
+    //HardwareSerial _serial;
+    byte _rxPin;
+    byte _txPin;
     DY::Player _player;
     uint16_t _firstTrackInAlbum;
     bool _isPlaying = false;
