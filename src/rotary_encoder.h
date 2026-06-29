@@ -1,34 +1,36 @@
-#include <ezButton.h>
+#pragma once
+
+#define ENCODER_DO_NOT_USE_INTERRUPTS
+#include <Encoder.h>
 
 enum YRotaryEncoderDirection { CCW, NONE, CW };
 
 class YRotaryEncoder {
    public:
-    YRotaryEncoder(byte clkPin, byte dtPin) : _clkBtn(clkPin), _dtBtn(dtPin) { _clkBtn.setDebounceTime(0); }
+    YRotaryEncoder(byte clkPin, byte dtPin) : _encoder(clkPin, dtPin) {}
 
     void loop() {
-        _clkBtn.loop();
-        _currentCLKState = _clkBtn.getState();
+        long newPos = _encoder.read();
+        long delta = newPos - _lastPos;
 
-        if (_currentCLKState == LOW && _currentCLKState != _previousCLKState) {
-            _direction = _dtBtn.getStateRaw() ? CW : CCW;
+        if (delta >= _stepsPerClick) {
+            _direction = CW;
+            _lastPos = newPos;
+        } else if (delta <= -_stepsPerClick) {
+            _direction = CCW;
+            _lastPos = newPos;
         } else {
             _direction = NONE;
         }
-
-        _previousCLKState = _currentCLKState;
     }
 
+    bool justTurnedCW()  { return _direction == CW; }
+    bool justTurnedCCW() { return _direction == CCW; }
     YRotaryEncoderDirection getDirection() { return _direction; }
 
-    bool justTurnedCW() { return _direction == CW; }
-
-    bool justTurnedCCW() { return _direction == CCW; }
-
    private:
-    ezButton _clkBtn;
-    ezButton _dtBtn;
-    YRotaryEncoderDirection _direction;
-    bool _currentCLKState = HIGH;
-    bool _previousCLKState = HIGH;
+    Encoder _encoder;
+    long _lastPos = 0;
+    const int _stepsPerClick = 4;  // typowy enkoder mechaniczny = 4 impulsy na klik
+    YRotaryEncoderDirection _direction = NONE;
 };

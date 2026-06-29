@@ -8,7 +8,7 @@
 #include "nfc.h"
 #include "rotary_encoder.h"
 
-YButton cardBtn(CARD_BTN_PIN, LOW);
+YButton cardBtn(CARD_BTN_PIN, LOW);  // LOW = karta włożona (normalny stan)
 
 YButton leftBtn(LEFT_BTN_PIN);
 YButton rightBtn(RIGHT_BTN_PIN);
@@ -87,24 +87,32 @@ void loop() {
             if (hasModeChanged) {
                 mp3Player.stop();
                 display.clear();
+                Serial.println("MODE: NO_CARD");
             }
-            if (cardBtn.isPressed()) changeMode(READ_CARD_MODE);
+            if (cardBtn.isPressed()) {
+                Serial.println("cardBtn pressed -> READ_CARD");
+                changeMode(READ_CARD_MODE);
+            }
             break;
 
         case READ_CARD_MODE:
             if (hasModeChanged) {
                 display.showHi();
                 mp3Player.stop();
+                Serial.println("MODE: READ_CARD");
             }
             switch (nfc.read()) {
                 case YNFC_NO_CARD:
+                    Serial.println("NFC: no card");
                     changeMode(NO_CARD_MODE);
                     break;
                 case YNFC_SUCCESS:
                     selectedAlbum = nfc.album();
+                    Serial.printf("NFC: album=%d\n", selectedAlbum);
                     changeMode(selectedAlbum == 0 ? NO_ALBUM_MODE : PLAYER_MODE);
                     break;
                 case YNFC_FAIL:
+                    Serial.println("NFC: fail");
                     changeMode(FAIL_MODE);
                     break;
             }
@@ -131,11 +139,14 @@ void loop() {
 
         case PLAYER_MODE:
             if (hasModeChanged) {
+                Serial.println("MODE: PLAYER");
                 mp3Player.playAlbum(selectedAlbum);
+                Serial.printf("after playAlbum: isPlaying=%d track=%d\n", mp3Player.isPlaying(), mp3Player.currentTrack());
                 updateTrackScreen();
             }
 
             if (cardBtn.isReleased()) {
+                Serial.println("cardBtn released -> NO_CARD");
                 changeMode(NO_CARD_MODE);
                 break;
             }
@@ -157,8 +168,10 @@ void loop() {
 
             if (leftRotaryEncoder.justTurnedCW()) {
                 mp3Player.increaseVolume();
+                // Serial.println("Vol Up");
             } else if (leftRotaryEncoder.justTurnedCCW()) {
                 mp3Player.decreaseVolume();
+                // Serial.println("Vol Down");
             }
 
             if (rightRotaryEncoder.justTurnedCW()) {
@@ -169,7 +182,10 @@ void loop() {
                 updateTrackScreen();
             }
 
-            if (currentMillis - lastUpdate > 1000) updateTrackScreen();
+            if (currentMillis - lastUpdate > 1000) {
+                Serial.printf("tick: isPlaying=%d track=%d cardBtn=%d\n", mp3Player.isPlaying(), mp3Player.currentTrack(), cardBtn.getState());
+                updateTrackScreen();
+            }
 
             break;
 

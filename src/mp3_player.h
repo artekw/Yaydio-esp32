@@ -2,13 +2,13 @@
 #include <DYPlayerArduino.h>
 #include <HardwareSerial.h>
 
-extern HardwareSerial Serial1;
 
 class YMP3Player {
    public:
     YMP3Player(byte rxPin, byte txPin) : _rxPin(rxPin), _txPin(txPin), _player(&Serial1) {}
 
     bool begin() {
+        Serial1.begin(9600, SERIAL_8N1, _rxPin, _txPin);
         _player.begin();
         _player.setVolume(MP3_INITIAL_VOLUME);
         _player.setCycleMode(DY::play_mode_t::RepeatDir);
@@ -19,7 +19,7 @@ class YMP3Player {
     }
 
     void playAlbum(uint16_t album) {
-        char path[12];
+        char path[14];
         sprintf(path, "/%04d/001.mp3", album);
 
         _player.stop();
@@ -69,7 +69,6 @@ class YMP3Player {
     uint16_t currentTrack() { return _player.getPlayingSound() - _firstTrackInAlbum + 1; }
 
    private:
-    //HardwareSerial _serial;
     byte _rxPin;
     byte _txPin;
     DY::Player _player;
