@@ -31,6 +31,6 @@ class YRotaryEncoder {
    private:
     Encoder _encoder;
     long _lastPos = 0;
-    const int _stepsPerClick = 4;  // typowy enkoder mechaniczny = 4 impulsy na klik
+    const int _stepsPerClick = 4;
     YRotaryEncoderDirection _direction = NONE;
 };

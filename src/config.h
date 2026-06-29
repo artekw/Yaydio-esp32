@@ -28,5 +28,5 @@
 // DY-SV5W (MP3 Player)
 #define MP3_RX_PIN 12
 #define MP3_TX_PIN 13
-#define MP3_INITIAL_VOLUME 10         // 0 - 30
+#define MP3_INITIAL_VOLUME 20         // 0 - 30
 #define MP3_EQ_MODE DY::eq_t::Normal  // Normal, Pop, Rock, Jazz, Classic
